@@ -1,5 +1,4 @@
 import re
-import string
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
@@ -8,34 +7,25 @@ nltk.download('words')
 from nltk.corpus import stopwords
 from langdetect import detect, DetectorFactory
 import spacy
+from pypdf import PdfReader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-def process_text (text):
-    text = text.lower()
-    text = re.sub(r'\d+', '', text)
-    text = re.sub(r'\s+', ' ', text)
-    text = re.sub(r'[^\w\s]', '', text)
-    tokens = nltk.word_tokenize(text)
-    return tokens
+def extract_text_from_pdf(file):
+    reader = PdfReader(file)
+    text = ""    
+    for page in reader.pages:
+        text += page.extract_text()
+    return text
 
-def remove_stopwords(tokens, language):
-    stop_words = set(stopwords.words(language)) 
-    filtered_tokens = [w for w in tokens if not w in stop_words]
-    return filtered_tokens
+def get_text_chunks(text):
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000, 
+        chunk_overlap=0, 
+        separators=[" ", ",", "\n"]
+    )
+    chunks = splitter.split_text(text)
+    return chunks
 
-def perfom_lemmatization(tokens):
-    lemmatizer = nltk.stem.WordNetLemmatizer()
-    lemmatized_tokens = [lemmatizer.lemmatize(w) for w in tokens]
-    return lemmatized_tokens
-
-def detect_language(text): 
-     DetectorFactory.seed = 0
-     detected_language =  detect(text)
-     if(detected_language == 'es'): 
-            return 'spanish'
-     elif(detected_language == 'en'):
-         return 'english'
-     else:
-         return 'english'
      
 def test(text):
     nlp = spacy.load("en_core_web_sm")

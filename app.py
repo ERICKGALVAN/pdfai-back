@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from routes.pdf import pdfRouter
 from fastapi.middleware.cors import CORSMiddleware
 
