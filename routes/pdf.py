@@ -1,6 +1,5 @@
-from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
-from routes.utils.pdf_utils import test, extract_text_from_pdf, get_text_chunks, get_embeddings, get_conversation_chain, handle_user_input
-from typing import Annotated
+from fastapi import APIRouter, File, UploadFile, HTTPException
+from utils.pdf_utils import test, extract_text_from_pdf, get_text_chunks, get_embeddings, get_conversation_chain, handle_user_input, generate_response, test2
 from functools import lru_cache
 from dotenv import load_dotenv
 import os
@@ -14,6 +13,10 @@ llm_openai = openai.OpenAI(model="text-davinci-003", api_key=API_KEY)
 
 class QuestionData(BaseModel):
     question: str
+    
+class ChatRequest(BaseModel):
+    conversation_id: str
+    message: str
 
 @pdfRouter.get("/")
 def read_root():
@@ -25,9 +28,7 @@ async def upload_pdf(file: UploadFile = File(...)):
         text = extract_text_from_pdf(file.file)
         chunks = get_text_chunks(text)
         vector_store = get_embeddings(chunks)
-        conversation = get_conversation_chain(vector_store)
-        respuesta = conversation({'question': 'de que trata el texto?', 'chat_history': []})
-        print(respuesta)
+        get_conversation_chain(vector_store)
         
         return {"filename": file.filename, "text": chunks }
     except Exception as e:
@@ -44,12 +45,23 @@ async def make_question(data: QuestionData):
         print(e)
         raise HTTPException(status_code=500, detail=str(e))
     
+@pdfRouter.post("/chat",)
+async def chat():
+    try:
+        test()
+        return {"test": "ok"}
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+    
 @pdfRouter.post("/test")
 async def open_ai():
     try:
-        respuesta = llm_openai("hola como estas ")
-        print(respuesta)
-        return {"respuesta": respuesta}
+        mem = test2()
+        print(mem)
+        return {"test": mem}
+        
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail=str(e))

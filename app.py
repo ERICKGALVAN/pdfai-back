@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from routes.pdf import pdfRouter
+from routes.users import userRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 origins = ["*"]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,5 +17,6 @@ app.add_middleware(
 )
 
 app.include_router(pdfRouter , prefix="/pdf", tags=["pdf"])
+app.include_router(userRouter , prefix="/user", tags=["user"])
 
 
