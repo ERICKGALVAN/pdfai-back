@@ -8,6 +8,9 @@ MONGO_URL = os.getenv("MONGO_URL")
 conn  = MongoClient(MONGO_URL)
 db = conn["pdfai"]
 users_collection = db["users"]
+conversations_collection = db["conversations"]
+embeddings_collection = db["embeddings"]
+ATLAS_VECTOR_SEARCH_INDEX_NAME = "pdf_index"
 try: 
     connection = conn.server_info()
     print("Connected to MongoDB " + str(connection.get("version")))

@@ -4,6 +4,7 @@ annotated-types==0.6.0
 anyio==3.7.1
 async-timeout @ file:///home/conda/feedstock_root/build_artifacts/async-timeout_1691763562544/work
 attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1683424013410/work
+bcrypt==4.1.2
 blis @ file:///Users/runner/miniforge3/conda-bld/cython-blis_1696148884738/work
 Brotli @ file:///Users/runner/miniforge3/conda-bld/brotli-split_1687884187023/work
 catalogue @ file:///Users/runner/miniforge3/conda-bld/catalogue_1695626375960/work
@@ -24,10 +25,12 @@ dataclasses-json==0.6.3
 datasets @ file:///home/conda/feedstock_root/build_artifacts/datasets_1698083369352/work
 dill @ file:///home/conda/feedstock_root/build_artifacts/dill_1690101045195/work
 distro==1.8.0
+dnspython==2.4.2
 docopt==0.6.2
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl#sha256=0964370218b7e1672a30ac50d72cdc6b16f7c867496f1d60925691188f4d2510
 en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl#sha256=f72abb34bdf174876bd4267b29b2501677e605e0a251fdc56c163003182ed68b
 es-dep-news-trf @ https://github.com/explosion/spacy-models/releases/download/es_dep_news_trf-3.5.0/es_dep_news_trf-3.5.0-py3-none-any.whl#sha256=4322e809c35ae135cc8fa71831c1aeafc1b6232886c45b247ed431d264d3445e
+faiss-cpu==1.7.4
 fastapi==0.104.1
 filelock @ file:///home/conda/feedstock_root/build_artifacts/filelock_1698714947081/work
 frozenlist @ file:///Users/runner/miniforge3/conda-bld/frozenlist_1695377727759/work
@@ -74,6 +77,8 @@ pydantic==2.5.2
 pydantic-settings==2.1.0
 pydantic_core==2.14.5
 Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1691408637400/work
+PyJWT==2.8.0
+pymongo==4.6.1
 pypdf==3.17.0
 PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
 python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
@@ -103,6 +108,7 @@ sympy @ file:///home/conda/feedstock_root/build_artifacts/sympy_1684180539862/wo
 tenacity==8.2.3
 terminaltables==3.1.10
 thinc @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_8bw2uoi2o2/croot/thinc_1684244943420/work
+tiktoken==0.5.2
 tokenizers @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_e39a8xrdr8/croot/tokenizers_1696539588493/work
 torch @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_82vavna4yl/croot/pytorch_1686931843901/work
 tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1691671248568/work
