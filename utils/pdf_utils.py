@@ -8,7 +8,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.callbacks import AsyncIteratorCallbackHandler
 from langchain.chains import ConversationChain
-from langchain.prompts import PromptTemplate, ChatPromptTemplate, SystemMessagePromptTemplate, MessagesPlaceholder, HumanMessagePromptTemplate
 from config.db import conversations_collection
 from langchain.vectorstores.mongodb_atlas import MongoDBAtlasVectorSearch
 from config.db import embeddings_collection, ATLAS_VECTOR_SEARCH_INDEX_NAME
@@ -60,9 +59,9 @@ def get_conversation_chain(vector_store):
         input_key="question",
     )
     conversation_chain = ConversationalRetrievalChain.from_llm(
-        retriever=memory,
+        retriever=vector_store.as_retriever(),
         llm=llm,  
-        
+        memory=memory
         
     )
     result = conversation_chain({"question": "de que habla el texto?"})

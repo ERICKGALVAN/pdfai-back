@@ -16,12 +16,15 @@ from utils.token import decode_access_token
 import jwt
 from bson import ObjectId
 from config.db import users_collection
+import chromadb
 
 load_dotenv()
 pdfRouter = APIRouter()
 API_KEY = os.getenv( "OPENAI_API_KEY")
 llm_openai = openai.OpenAI(model="text-davinci-003", api_key=API_KEY)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+client = chromadb.PersistentClient()
+collection = client.get_or_create_collection(name="pdf",  metadata={"hnsw:space": "cosine"})
 
 class QuestionData(BaseModel):
     question: str
@@ -43,16 +46,25 @@ async def upload_pdf(token: Annotated[str, Depends(oauth2_scheme)], file: Upload
         embeddingList = []
         for embedding in embeddings:
             embeddingList.append(embedding.embedding)
-        # get_conversation_chain(vector_store)
         new_conversation = {
             "filename": file.filename,
             "text": text,
             "embedding": embeddingList
         }
         conversationId = conversations_collection.insert_one(new_conversation).inserted_id
+        ids = []
+        for id in range(len(embeddingList)):
+            ids.append(str(conversationId) + "-" + str(id))            
+        collection.add(
+            documents=chunks,
+            embeddings=embeddingList,
+            ids=ids
+        )
+        conversations_collection.find_one_and_update({"_id": conversationId}, {"$set": {"ids": ids}})
         user = get_current_user(token)
         users_collection.update_one({"_id": ObjectId(user["id"])}, {"$push": {"chats": str(conversationId)}})
         conversationInserted = conversations_collection.find_one({"_id": conversationId})
+        
         return str(conversationInserted)
     except Exception as e:
         print(e)
