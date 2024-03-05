@@ -1,129 +1,59 @@
-aiohttp @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_44k_ps5jm7/croot/aiohttp_1694181081849/work
-aiosignal @ file:///home/conda/feedstock_root/build_artifacts/aiosignal_1667935791922/work
+
 annotated-types==0.6.0
 anyio==3.7.1
-async-timeout @ file:///home/conda/feedstock_root/build_artifacts/async-timeout_1691763562544/work
-attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1683424013410/work
 bcrypt==4.1.2
-blis @ file:///Users/runner/miniforge3/conda-bld/cython-blis_1696148884738/work
-Brotli @ file:///Users/runner/miniforge3/conda-bld/brotli-split_1687884187023/work
-catalogue @ file:///Users/runner/miniforge3/conda-bld/catalogue_1695626375960/work
 certifi==2023.7.22
-cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1696001708107/work
-charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1698833585322/work
-click @ file:///home/conda/feedstock_root/build_artifacts/click_1692311806742/work
 cloudpathlib==0.16.0
-colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
 colorclass==2.2.2
 commonmark==0.9.1
-confection @ file:///Users/runner/miniforge3/conda-bld/confection_1696034125099/work
 curated-tokenizers==0.0.8
 curated-transformers==0.1.1
-cymem @ file:///Users/ec2-user/ci_py311/cymem_1678326175618/work
-dataclasses @ file:///home/conda/feedstock_root/build_artifacts/dataclasses_1628958434797/work
 dataclasses-json==0.6.3
-datasets @ file:///home/conda/feedstock_root/build_artifacts/datasets_1698083369352/work
-dill @ file:///home/conda/feedstock_root/build_artifacts/dill_1690101045195/work
 distro==1.8.0
 dnspython==2.4.2
 docopt==0.6.2
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl#sha256=0964370218b7e1672a30ac50d72cdc6b16f7c867496f1d60925691188f4d2510
-en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.7.3/en_core_web_trf-3.7.3-py3-none-any.whl#sha256=f72abb34bdf174876bd4267b29b2501677e605e0a251fdc56c163003182ed68b
-es-dep-news-trf @ https://github.com/explosion/spacy-models/releases/download/es_dep_news_trf-3.5.0/es_dep_news_trf-3.5.0-py3-none-any.whl#sha256=4322e809c35ae135cc8fa71831c1aeafc1b6232886c45b247ed431d264d3445e
 faiss-cpu==1.7.4
 fastapi==0.104.1
-filelock @ file:///home/conda/feedstock_root/build_artifacts/filelock_1698714947081/work
-frozenlist @ file:///Users/runner/miniforge3/conda-bld/frozenlist_1695377727759/work
-fsspec @ file:///home/conda/feedstock_root/build_artifacts/fsspec_1697919321618/work
-future @ file:///home/conda/feedstock_root/build_artifacts/future_1673596611778/work
 greenlet==3.0.2
 h11==0.14.0
 httpcore==1.0.2
 httptools==0.6.1
 httpx==0.25.2
-huggingface-hub @ file:///home/conda/feedstock_root/build_artifacts/huggingface_hub_1699475748238/work
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
-importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1688754491823/work
-Jinja2 @ file:///home/conda/feedstock_root/build_artifacts/jinja2_1654302431367/work
-joblib @ file:///home/conda/feedstock_root/build_artifacts/joblib_1691577114857/work
 jsonpatch==1.33
 jsonpointer==2.4
 langchain==0.0.350
 langchain-community==0.0.3
 langchain-core==0.1.0
-langcodes @ file:///home/conda/feedstock_root/build_artifacts/langcodes_1636741340529/work
 langdetect==1.0.9
 langsmith==0.0.70
-MarkupSafe @ file:///Users/runner/miniforge3/conda-bld/markupsafe_1695367621021/work
 marshmallow==3.20.1
-mkl-service==2.4.0
-mpmath @ file:///home/conda/feedstock_root/build_artifacts/mpmath_1678228039184/work
-multidict @ file:///Users/runner/miniforge3/conda-bld/multidict_1696716117973/work
-multiprocess @ file:///Users/runner/miniforge3/conda-bld/multiprocess_1695458924903/work
-murmurhash @ file:///Users/ec2-user/ci_py311/murmurhash_1678377896080/work
 mypy-extensions==1.0.0
-networkx @ file:///home/conda/feedstock_root/build_artifacts/networkx_1698504735452/work
 nltk==3.8.1
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1668919173641/work
 openai==1.3.9
-packaging @ file:///home/conda/feedstock_root/build_artifacts/packaging_1696202382185/work
 pandas==1.5.3
-pathy @ file:///home/conda/feedstock_root/build_artifacts/pathy_1687286298811/work
 pip-upgrader==1.4.15
-preshed @ file:///Users/ec2-user/ci_py311/preshed_1678382460802/work
 pyarrow==11.0.0
-pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
 pydantic==2.5.2
 pydantic-settings==2.1.0
 pydantic_core==2.14.5
-Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1691408637400/work
 PyJWT==2.8.0
 pymongo==4.6.1
 pypdf==3.17.0
-PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
-python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
 python-dotenv==1.0.0
 python-multipart==0.0.6
-pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1693930252784/work
-PyYAML @ file:///Users/runner/miniforge3/conda-bld/pyyaml_1695373551341/work
-regex @ file:///Users/runner/miniforge3/conda-bld/regex_1696364246844/work
-requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1684774241324/work
-rich @ file:///home/conda/feedstock_root/build_artifacts/rich_1664752510089/work
-sacremoses @ file:///home/conda/feedstock_root/build_artifacts/sacremoses_1651557636210/work
-shellingham @ file:///home/conda/feedstock_root/build_artifacts/shellingham_1698144360966/work
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
-smart-open @ file:///home/conda/feedstock_root/build_artifacts/smart_open_1630238320325/work
 sniffio==1.3.0
 spacy==3.7.2
-spacy-alignments @ file:///Users/ec2-user/ci_py311/spacy-alignments_1678422876397/work
 spacy-curated-transformers==0.2.1
-spacy-legacy @ file:///home/conda/feedstock_root/build_artifacts/spacy-legacy_1674550301837/work
-spacy-loggers @ file:///home/conda/feedstock_root/build_artifacts/spacy-loggers_1694527114282/work
 spacy-lookups-data==1.0.5
 spacy-transformers==1.2.5
 SQLAlchemy==2.0.23
-srsly @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_60aqy3mcm7/croot/srsly_1698702585191/work
 starlette==0.27.0
-sympy @ file:///home/conda/feedstock_root/build_artifacts/sympy_1684180539862/work
 tenacity==8.2.3
 terminaltables==3.1.10
-thinc @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_8bw2uoi2o2/croot/thinc_1684244943420/work
 tiktoken==0.5.2
-tokenizers @ file:///private/var/folders/c_/qfmhj66j0tn016nkx_th4hxm0000gp/T/abs_e39a8xrdr8/croot/tokenizers_1696539588493/work
-torch @ file:///private/var/folders/sy/f16zz6x50xz3113nwtb9bvq00000gp/T/abs_82vavna4yl/croot/pytorch_1686931843901/work
-tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1691671248568/work
-transformers @ file:///home/conda/feedstock_root/build_artifacts/transformers_1667461945734/work
-typer @ file:///home/conda/feedstock_root/build_artifacts/typer_1667832226065/work
 typing-inspect==0.9.0
-typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1695040754690/work
-urllib3 @ file:///home/conda/feedstock_root/build_artifacts/urllib3_1697720414277/work
 uvicorn==0.24.0.post1
 uvloop==0.19.0
-wasabi @ file:///Users/runner/miniforge3/conda-bld/wasabi_1686131428443/work
 watchfiles==0.21.0
 weasel==0.3.4
 websockets==12.0
-xx-sent-ud-sm @ https://github.com/explosion/spacy-models/releases/download/xx_sent_ud_sm-3.5.0/xx_sent_ud_sm-3.5.0-py3-none-any.whl#sha256=bbc9c66216e1232e144c33bf525afab525ff0e276850fd0c75762f73a7edb6b8
-xxhash @ file:///Users/runner/miniforge3/conda-bld/python-xxhash_1696486356422/work
-yarl @ file:///Users/runner/miniforge3/conda-bld/yarl_1696732556295/work
-zipp @ file:///home/conda/feedstock_root/build_artifacts/zipp_1695255097490/work

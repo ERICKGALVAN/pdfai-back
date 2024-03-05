@@ -2,10 +2,10 @@ from pydantic import BaseModel
 from typing import Optional
 
 class User(BaseModel):
-    _id: str | None = None
+    _id: Optional[str] = None
     username: str 
     password: str
-    chats: list[str] | None = []
+    chats: Optional[list] = []
     
 class UserLogin(BaseModel):
     username: str 
