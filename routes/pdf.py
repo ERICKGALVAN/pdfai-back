@@ -147,6 +147,7 @@ async def get_documents(token: Annotated[str, Depends(oauth2_scheme)]):
             list_documents.append(documentEntity(document))
         return {"documents": list_documents}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
     
 @pdfRouter.get("/llms")

@@ -22,8 +22,6 @@ from dotenv import load_dotenv
 import requests
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langchain.llms.huggingface_hub import HuggingFaceHub
-
-
 from langchain.vectorstores.faiss import FAISS
 
 load_dotenv()
@@ -47,14 +45,23 @@ llm_mistral = HuggingFaceHub(repo_id="mistralai/Mistral-7B-Instruct-v0.2", huggi
 llms = {
     "openai": llm_openai,
     "flan": llm_flan,
-    "byt5": llm_byt5,
-    "flan_xxl": llm_flan_xxl,
-    "blenderbot": llm_blenderbot,
-    "fastchat": llm_fastchat,
-    "belle": llm_belle,
-    "gpt2": llm_gpt2,
+    # "byt5": llm_byt5,
+    # "flan_xxl": llm_flan_xxl,
+    # "blenderbot": llm_blenderbot,
+    # "fastchat": llm_fastchat,
+    # "belle": llm_belle,
+    # "gpt2": llm_gpt2,
     "mistral": llm_mistral,
 }
+
+from evaluate import load
+
+comet_metric = load('comet')
+source = ["Dem Feuer konnte Einhalt geboten werden", "Schulen und Kindergärten wurden eröffnet."]
+hypothesis = ["The fire could be stopped", "Schools and kindergartens were open"]
+reference = ["They were able to control the fire.", "Schools and kindergartens opened"]
+comet_score = comet_metric.compute(predictions=hypothesis, references=reference, sources=source)
+print(comet_score)
 
 def test_models():
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base", max_new_tokens=100000)

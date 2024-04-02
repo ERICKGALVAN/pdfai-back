@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from routes.pdf import pdfRouter
 from routes.users import userRouter
 from fastapi.middleware.cors import CORSMiddleware
-
 app = FastAPI()
 
 origins = ["*"]
