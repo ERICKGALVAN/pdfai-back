@@ -2,9 +2,11 @@
 import os
 from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
+# from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain.memory import ConversationBufferMemory
-from langchain.chat_models import ChatOpenAI
+# from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models.openai import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.chains import ConversationChain
 from config.db import conversations_collection
@@ -12,6 +14,7 @@ from langchain.vectorstores.mongodb_atlas import MongoDBAtlasVectorSearch
 from config.db import embeddings_collection, ATLAS_VECTOR_SEARCH_INDEX_NAME
 from langchain.callbacks import AsyncIteratorCallbackHandler
 from openai import OpenAI
+
 from langchain.vectorstores import VectorStore
 from bson import ObjectId
 from langchain_community.llms.huggingface_endpoint import HuggingFaceEndpoint
@@ -19,10 +22,11 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
-import requests
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langchain.llms.huggingface_hub import HuggingFaceHub
 from langchain.vectorstores.faiss import FAISS
+
+from langchain_community.llms import llamacpp
 
 load_dotenv()
 API_KEY = os.getenv( "OPENAI_API_KEY")
@@ -56,12 +60,48 @@ llms = {
 
 from evaluate import load
 
-comet_metric = load('comet')
-source = ["Dem Feuer konnte Einhalt geboten werden", "Schulen und Kindergärten wurden eröffnet."]
-hypothesis = ["The fire could be stopped", "Schools and kindergartens were open"]
-reference = ["They were able to control the fire.", "Schools and kindergartens opened"]
-comet_score = comet_metric.compute(predictions=hypothesis, references=reference, sources=source)
-print(comet_score)
+import os
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+#https://huggingface.co/evaluate-metric
+
+# meteor = load('meteor')
+# predictions = ["it is about a dog named boby"]
+# reference = ["the story of a dog named boby"]
+# results = meteor.compute(predictions=predictions, references=reference)
+# print("///////HOLA////////")
+# print(results)
+
+#https://huggingface.co/spaces/evaluate-metric/bleu
+bleu = load('bleu')
+
+# https://huggingface.co/spaces/evaluate-metric/perplexity
+perplexity = load('perplexity')
+
+#https://huggingface.co/spaces/evaluate-metric/bertscore
+bertscore = load('bertscore')
+
+# https://huggingface.co/spaces/evaluate-metric/rouge
+rouge = load('rouge')
+
+def get_bleu_score(predictions: list[str], reference:list[str]):
+    results = bleu.compute(predictions=predictions, references=reference)
+    return results
+
+def get_perplexity_score(predictions: list[str]):
+    results = perplexity.compute(predictions=predictions, )
+    return results
+
+def get_bertscore_score(predictions: list[str], reference:list[str]):
+    results = bertscore.compute(predictions=predictions, references=reference, lang="en")
+    return results
+
+def get_rouge_score(predictions: list[str], reference:list[str]):
+    results = rouge.compute(predictions=predictions, references=reference)
+    return results
+
+
 
 def test_models():
     tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base", max_new_tokens=100000)
@@ -109,7 +149,7 @@ def get_vector_store(chunks: list[str]):
     return vector_store
 
 
-def get_conversation_chain_with_history(vector_store, chat_history: list, llm:str):
+def get_conversation_chain_with_history(vector_store, chat_history: list, llm:str, test:bool):
     try:
         memory = ConversationBufferMemory(
             memory_key="chat_history",
@@ -119,22 +159,21 @@ def get_conversation_chain_with_history(vector_store, chat_history: list, llm:st
             return_messages=True,
             input_key="question",
         )
+        
         for chat in chat_history:
-            if chat["by"] == "user":
-                memory.chat_memory.add_user_message(chat["text"])
-            else:
-                memory.chat_memory.add_ai_message(chat["text"])
+                if chat["by"] == "user":
+                    memory.chat_memory.add_user_message(chat["text"])
+                else:
+                    memory.chat_memory.add_ai_message(chat["text"])
         conversation_chain = ConversationalRetrievalChain.from_llm(
             retriever=vector_store.as_retriever(),
             llm=llms[llm],
             memory=memory
         )
-        conversation_chain({"question": "hola"})
-        
         return conversation_chain
     except Exception as e:
-        print("el error es:")
-        print(e)
+        raise e
+        
 
 def save_conversation_chain(file_name: str, document: str, question: str):
     inserted_id = conversations_collection.insert_one({"file_name": file_name, "document": ObjectId(document), "chat_history": [
@@ -147,11 +186,7 @@ def save_conversation_chain(file_name: str, document: str, question: str):
     return chat_history
     
 
-def handle_user_input(user_input):
-    print(user_input)
-    
-    return user_input
-    
+
      
 def test():
     response = ""

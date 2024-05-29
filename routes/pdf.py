@@ -1,7 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
-from utils.pdf_utils import (test, extract_text_from_pdf, get_text_chunks, get_embeddings, 
-handle_user_input, test2, save_conversation_chain, generate_embedding, get_vector_store, get_conversation_chain_with_history,
-test_models, get_llms)
+from utils.pdf_utils import (test, extract_text_from_pdf, get_text_chunks, get_embeddings, test2, save_conversation_chain, generate_embedding, get_vector_store, get_conversation_chain_with_history,
+test_models, get_llms, get_bleu_score, get_bertscore_score, get_rouge_score, llms)
 from dotenv import load_dotenv
 import os
 from langchain.llms import openai, llamacpp
@@ -29,6 +28,13 @@ class QuestionData(BaseModel):
     question: str
     id: str
     llm: str
+    test: bool
+    reference: str = None
+    
+class TestData(BaseModel):
+    prediction: str
+    reference: str
+
     
 class ChatRequest(BaseModel):
     conversation_id: str
@@ -41,20 +47,12 @@ def read_root():
 @pdfRouter.post("/upload")
 async def upload_pdf(token: Annotated[str, Depends(oauth2_scheme)], file: UploadFile = File(...)):
     try:
-        #print pdf in bytes
         text = extract_text_from_pdf(file.file)
         chunks = get_text_chunks(text)
-        # embeddings = generate_embedding(chunks)
-        # vector_store = get_vector_store(chunks)
-        # conversation_chain = get_conversation_chain(vector_store)
-        # result = conversation_chain({"question": "me llamo erick"})
-        # result = conversation_chain({"question": "como me llamo?"})
-        # print(result)
         file_id = fs.put(file.file, filename=file.filename,)
         user = get_current_user(token)
         inserted_id = documents_collection.insert_one({"filename": file.filename, "chunks": chunks, "user": ObjectId(user['id']), "fileid": file_id, },  ).inserted_id        
         return {"id": str(inserted_id), "text": text, "chunks": chunks}
-    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
@@ -68,9 +66,7 @@ async def get_conversation(id: str ):
         raise HTTPException(status_code=500, detail=str(e))
     
 @pdfRouter.post("/makeQuestion")
-async def make_question(data: QuestionData, token: Annotated[str, Depends(oauth2_scheme)]):
-    # test_models()
-    print(data)
+async def make_question(data: QuestionData):
     try:
         question = data.question
         doc = documentEntity(documents_collection.find_one({"_id": ObjectId(data.id)}))
@@ -81,24 +77,54 @@ async def make_question(data: QuestionData, token: Annotated[str, Depends(oauth2
         chat_history = conversations_collection.find_one({"document": ObjectId(doc["id"])})
         if chat_history is None:
             new_chat_history = save_conversation_chain(doc["filename"], doc["id"], question)
-            conversation_chain = get_conversation_chain_with_history(vector_store, new_chat_history["chat_history"], data.llm)
+            conversation_chain = get_conversation_chain_with_history(vector_store, new_chat_history["chat_history"], data.llm, False)
             response = conversation_chain({"question": question})
-            print(response)
-            new_chat_history["chat_history"].append({"by": "ai", "text": response["answer"]})
+            if data.llm == 'mistral':
+                res = response["answer"].split('Helpful Answer:')[1]
+            else:
+                res = response["answer"]
+            new_chat_history["chat_history"].append({"by": "ai", "text": res})
             conversations_collection.update_one({"file_name": doc["filename"]}, {"$set": {"chat_history": new_chat_history["chat_history"]}})
-            return {"chat_history": new_chat_history["chat_history"]}
+            test_result = None
+            if data.reference != '':
+                test_result = await test_question(data.reference, vector_store, new_chat_history, question)
+            return {"chat_history": new_chat_history["chat_history"], "test": test_result}
         else:
             chat_history["chat_history"].append({"by": "user", "text": question})
             conversations_collection.update_one({"file_name": doc["filename"]}, {"$set": {"chat_history": chat_history["chat_history"]}})    
-            conversation_chain = get_conversation_chain_with_history(vector_store, chat_history["chat_history"], data.llm)
+            conversation_chain = get_conversation_chain_with_history(vector_store, chat_history["chat_history"], data.llm, False)
             response = conversation_chain({"question": question})
-            print(response)
-            chat_history["chat_history"].append({"by": "ai", "text": response["answer"]})
+            if data.llm == 'mistral':
+                res = response["answer"].split('Helpful Answer:')[1]
+            else:
+                res = response["answer"]
+            chat_history["chat_history"].append({"by": "ai", "text": res})
+            
             conversations_collection.update_one({"file_name": doc["filename"]}, {"$set": {"chat_history": chat_history["chat_history"]}})
-            return {"chat_history": chat_history["chat_history"]}
+            test_result = None
+            if data.reference != '':
+                test_result = await test_question(data.reference, vector_store, chat_history, question)
+            return {"chat_history": chat_history["chat_history"], "test": test_result}
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=500, detail=str(e))
+    
+@pdfRouter.post("/testQuestion")
+async def test_question(reference: str, vector_store, chat_history, question: str):
+    results = []
+    for llm in llms:
+        conv = get_conversation_chain_with_history(vector_store, chat_history["chat_history"], llm, True)
+        res = conv({"question": question})
+        if llm == 'mistral':
+            predition = res["answer"].split('Helpful Answer:')[1]
+        else:
+            predition = res["answer"]
+        predition_list = [predition]
+        reference_list = [reference]
+        bleu_precision = get_bleu_score(predictions=predition_list, reference=reference_list)
+        bert_score = get_bertscore_score(predictions=predition_list, reference=reference_list)
+        rouge_score = get_rouge_score(predictions=predition_list, reference=reference_list)
+        results.append({"llm": llm, "bleu": bleu_precision, "bert": bert_score, "rouge": rouge_score}) 
+    return results
     
 @pdfRouter.get("/bytes/{id}")
 async def get_bytes(token: Annotated[str, Depends(oauth2_scheme)], id: str):
