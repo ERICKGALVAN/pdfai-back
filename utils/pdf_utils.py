@@ -47,7 +47,7 @@ llm_gpt2 = HuggingFaceHub(repo_id="openai-community/gpt2", huggingfacehub_api_to
 llm_mistral = HuggingFaceHub(repo_id="mistralai/Mistral-7B-Instruct-v0.2", huggingfacehub_api_token=HUGGINGFACE_API_KEY)
 
 llms = {
-    "openai": llm_openai,
+    "gpt": llm_openai,
     "flan": llm_flan,
     # "byt5": llm_byt5,
     # "flan_xxl": llm_flan_xxl,
@@ -57,6 +57,7 @@ llms = {
     # "gpt2": llm_gpt2,
     "mistral": llm_mistral,
 }
+
 
 from evaluate import load
 
@@ -77,7 +78,7 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 bleu = load('bleu')
 
 # https://huggingface.co/spaces/evaluate-metric/perplexity
-perplexity = load('perplexity')
+perplexity = load('perplexity', module_type="metric")
 
 #https://huggingface.co/spaces/evaluate-metric/bertscore
 bertscore = load('bertscore')
@@ -85,13 +86,19 @@ bertscore = load('bertscore')
 # https://huggingface.co/spaces/evaluate-metric/rouge
 rouge = load('rouge')
 
+# https://huggingface.co/spaces/evaluate-metric/wiki_split
+wiki_split = load('wiki_split')
+
 def get_bleu_score(predictions: list[str], reference:list[str]):
     results = bleu.compute(predictions=predictions, references=reference)
     return results
 
-def get_perplexity_score(predictions: list[str]):
-    results = perplexity.compute(predictions=predictions, )
-    return results
+def get_perplexity_score(predictions: list[str], model_id:str):
+    try:
+        results = perplexity.compute(predictions=predictions, model_id=model_id)
+        return results
+    except Exception as e:
+        print(e)
 
 def get_bertscore_score(predictions: list[str], reference:list[str]):
     results = bertscore.compute(predictions=predictions, references=reference, lang="en")
@@ -101,6 +108,12 @@ def get_rouge_score(predictions: list[str], reference:list[str]):
     results = rouge.compute(predictions=predictions, references=reference)
     return results
 
+def get_wiki_split_score(predictions: list[str], reference:list[str]):
+    try:
+        results = wiki_split.compute(predictions=predictions, references=reference, sources=reference)
+        return results
+    except Exception as e:
+        print(e)
 
 
 def test_models():

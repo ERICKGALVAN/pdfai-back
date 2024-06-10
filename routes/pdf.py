@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
 from utils.pdf_utils import (test, extract_text_from_pdf, get_text_chunks, get_embeddings, test2, save_conversation_chain, generate_embedding, get_vector_store, get_conversation_chain_with_history,
-test_models, get_llms, get_bleu_score, get_bertscore_score, get_rouge_score, llms)
+test_models, get_llms, get_bleu_score, get_bertscore_score, get_rouge_score, llms, get_perplexity_score, get_wiki_split_score)
 from dotenv import load_dotenv
 import os
 from langchain.llms import openai, llamacpp
@@ -28,7 +28,6 @@ class QuestionData(BaseModel):
     question: str
     id: str
     llm: str
-    test: bool
     reference: str = None
     
 class TestData(BaseModel):
@@ -88,7 +87,9 @@ async def make_question(data: QuestionData):
             test_result = None
             if data.reference != '':
                 test_result = await test_question(data.reference, vector_store, new_chat_history, question)
-            return {"chat_history": new_chat_history["chat_history"], "test": test_result}
+                last_response = test_result["responses"]
+                return {"chat_history": new_chat_history["chat_history"], "test": test_result["results"], "last_response": last_response}
+            return {"chat_history": new_chat_history["chat_history"], "test": test_result, "last_response": res}
         else:
             chat_history["chat_history"].append({"by": "user", "text": question})
             conversations_collection.update_one({"file_name": doc["filename"]}, {"$set": {"chat_history": chat_history["chat_history"]}})    
@@ -99,32 +100,50 @@ async def make_question(data: QuestionData):
             else:
                 res = response["answer"]
             chat_history["chat_history"].append({"by": "ai", "text": res})
-            
             conversations_collection.update_one({"file_name": doc["filename"]}, {"$set": {"chat_history": chat_history["chat_history"]}})
             test_result = None
             if data.reference != '':
                 test_result = await test_question(data.reference, vector_store, chat_history, question)
-            return {"chat_history": chat_history["chat_history"], "test": test_result}
+                last_response = test_result["responses"]
+                return {"chat_history": chat_history["chat_history"], "test": test_result["results"], "last_response": last_response}
+            return {"chat_history": chat_history["chat_history"], "test": test_result, "last_response": res}
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
     
 @pdfRouter.post("/testQuestion")
 async def test_question(reference: str, vector_store, chat_history, question: str):
     results = []
+    responses = []
     for llm in llms:
         conv = get_conversation_chain_with_history(vector_store, chat_history["chat_history"], llm, True)
         res = conv({"question": question})
         if llm == 'mistral':
-            predition = res["answer"].split('Helpful Answer:')[1]
+            prediction = res["answer"].split('Helpful Answer:')[1]
         else:
-            predition = res["answer"]
-        predition_list = [predition]
+            prediction = res["answer"]
+        responses.append({"llm": llm, "prediction": prediction})
+        prediction_list = [prediction]
         reference_list = [reference]
-        bleu_precision = get_bleu_score(predictions=predition_list, reference=reference_list)
-        bert_score = get_bertscore_score(predictions=predition_list, reference=reference_list)
-        rouge_score = get_rouge_score(predictions=predition_list, reference=reference_list)
-        results.append({"llm": llm, "bleu": bleu_precision, "bert": bert_score, "rouge": rouge_score}) 
-    return results
+        bleu_precision = get_bleu_score(predictions=prediction_list, reference=reference_list)
+        bert_score = get_bertscore_score(predictions=prediction_list, reference=reference_list)
+        rouge_score = get_rouge_score(predictions=prediction_list, reference=reference_list)
+        wiki_score = get_wiki_split_score(predictions=prediction_list, reference=reference_list)
+        # model_id = ''
+        # if llm == 'mistral':
+        #     model_id = 'mistralai'
+        # elif llm == 'llama':
+        #     model_id = 'llama'
+        # elif llm == 'gpt':
+        #     model_id = 'gpt2'
+        # perplexity_score = get_perplexity_score(predictions=prediction_list, model_id=model_id)
+        # print(perplexity_score)
+        responses_data = ""
+        for response in responses:
+            responses_data += f"{response['llm']}: {response['prediction']} \n\n"
+        results.append({"llm": llm, "bleu": bleu_precision, "bert": bert_score, "rouge": rouge_score, "wiki_split": wiki_score,}) 
+        test_data = {"results": results, "responses": responses_data}
+    return test_data
     
 @pdfRouter.get("/bytes/{id}")
 async def get_bytes(token: Annotated[str, Depends(oauth2_scheme)], id: str):
