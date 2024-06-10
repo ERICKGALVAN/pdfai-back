@@ -4,9 +4,9 @@ Este es el backend del proyecto de tesina "Comparación cualitativa y cuantitati
 
 ## Modelos utilizados
 
-- OpenAI GPT 3.5 Turbo: [a link](https://platform.openai.com/docs/models/gpt-3-5-turbo)
-- MistralAI Mistral-7B-Instruct-v0.2: [a link](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2)
-- Google Flan T5 Base: [a link](https://huggingface.co/google/flan-t5-base)
+- OpenAI GPT 3.5 Turbo: [OpenAI/Gpt3.5](https://platform.openai.com/docs/models/gpt-3-5-turbo)
+- MistralAI Mistral-7B-Instruct-v0.2: [HuggingFace/Mistral7B](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2)
+- Google Flan T5 Base: [HuggingFace/FlanT5](https://huggingface.co/google/flan-t5-base)
   @misc{https://doi.org/10.48550/arxiv.2210.11416,
   doi = {10.48550/ARXIV.2210.11416},
   url = {https://arxiv.org/abs/2210.11416},
@@ -20,7 +20,7 @@ Este es el backend del proyecto de tesina "Comparación cualitativa y cuantitati
 
 ## Las métricas cuantitativas utilizadas fueron probadas con los siguientes modelos:
 
-- BLEU: [a link](https://huggingface.co/spaces/evaluate-metric/bleu)
+- BLEU: [HuggingFace/BLEU](https://huggingface.co/spaces/evaluate-metric/bleu)
   @INPROCEEDINGS{Papineni02bleu:a,
   author = {Kishore Papineni and Salim Roukos and Todd Ward and Wei-jing Zhu},
   title = {BLEU: a Method for Automatic Evaluation of Machine Translation},
@@ -41,7 +41,7 @@ Este es el backend del proyecto de tesina "Comparación cualitativa y cuantitati
   pages = "501--507",
   }
 
-- BERTSCORE: [a link](https://huggingface.co/spaces/evaluate-metric/bertscore)
+- BERTSCORE: [HuggingFace/BERTSCORE](https://huggingface.co/spaces/evaluate-metric/bertscore)
   @inproceedings{bert-score,
   title={BERTScore: Evaluating Text Generation with BERT},
   author={Tianyi Zhang* and Varsha Kishore* and Felix Wu\* and Kilian Q. Weinberger and Yoav Artzi},
@@ -50,7 +50,7 @@ Este es el backend del proyecto de tesina "Comparación cualitativa y cuantitati
   url={https://openreview.net/forum?id=SkeHuCVFDr}
   }
 
-- ROUGE: [a link](https://huggingface.co/spaces/evaluate-metric/rouge)
+- ROUGE: [HuggingFace/ROUGE](https://huggingface.co/spaces/evaluate-metric/rouge)
   @inproceedings{lin-2004-rouge,
   title = "{ROUGE}: A Package for Automatic Evaluation of Summaries",
   author = "Lin, Chin-Yew",
@@ -63,7 +63,7 @@ Este es el backend del proyecto de tesina "Comparación cualitativa y cuantitati
   pages = "74--81",
   }
 
-- Wiki Split: [a link](https://huggingface.co/spaces/evaluate-metric/wiki_split)
+- Wiki Split: [HuggingFace/WikiSplit](https://huggingface.co/spaces/evaluate-metric/wiki_split)
   @article{rothe2020leveraging,
   title={Leveraging pre-trained checkpoints for sequence generation tasks},
   author={Rothe, Sascha and Narayan, Shashi and Severyn, Aliaksei},
