@@ -69,7 +69,7 @@ numexpr==2.10.1
 numpy==1.26.4
 openai==1.14.3
 orjson==3.10.0
-packaging==24.1
+packaging==23.2
 pandas==2.2.2
 pillow==10.3.0
 portalocker==2.8.2
