@@ -44,13 +44,13 @@ def read_root():
     return {"Hello": "World"}
 
 @pdfRouter.post("/upload")
-async def upload_pdf(token: Annotated[str, Depends(oauth2_scheme)], file: UploadFile = File(...)):
+async def upload_pdf(file: UploadFile = File(...)):
     try:
         text = extract_text_from_pdf(file.file)
         chunks = get_text_chunks(text)
         file_id = fs.put(file.file, filename=file.filename,)
-        user = get_current_user(token)
-        inserted_id = documents_collection.insert_one({"filename": file.filename, "chunks": chunks, "user": ObjectId(user['id']), "fileid": file_id, },  ).inserted_id        
+        # user = get_current_user(token)
+        inserted_id = documents_collection.insert_one({"filename": file.filename, "chunks": chunks, "user": None, "fileid": file_id, },  ).inserted_id        
         return {"id": str(inserted_id), "text": text, "chunks": chunks}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
