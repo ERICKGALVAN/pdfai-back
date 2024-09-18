@@ -9,11 +9,11 @@ To use this project in your local machine first install dependencies with
 
 Also you will need an .env file, which will look like this:
 
-MONGO_URL = (your own mungo url, can obtain it from MongoDB cluster for free)
-
-OPENAI_API_KEY= (an open ai api key, maybe you can get some free credits, but it is not so expensive. this is necessary for embeddings and the gpt model)
-
-HUGGINGFACE_API_KEY= (api key necessary for some models and test data )
+    MONGO_URL = (your own mungo url, can obtain it from MongoDB cluster for free)
+    
+    OPENAI_API_KEY= (an open ai api key, maybe you can get some free credits, but it is not so expensive. this is necessary for embeddings and the gpt model)
+    
+    HUGGINGFACE_API_KEY= (api key necessary for some models and test data )
 
 after having those requirements, you can run the project with
 
